@@ -30,6 +30,23 @@ class UsersController extends Controller
 		return view('users.index', compact('result_absen'));
 	}
 
+	// Laporan Absensi
+	public function LaporanAbsen(Request $req)
+	{
+		$user_id = Auth::guard('users')->user()->id;
+
+		$start = $req->get('tanggal_start') . ' 00:00:00';
+		$end = $req->get('tanggal_end') . ' 00:00:00';
+
+		$data = Leaves::with('Attedances')
+				->where('user_id', $user_id)
+				->whereBetween('leaves.created_at', [$start, $end])
+				->orderBy('leaves.created_at', 'desc')
+				->get();
+
+		return view('users.laporan', compact('data'));
+	}
+
 	// Process Absen Keluar
 	public function AbsenKeluar(Request $request, $id_absen)
 	{

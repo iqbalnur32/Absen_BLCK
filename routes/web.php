@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth.users'], 'prefix' => 'users'], function() {
 	// Absensi
 	Route::post('/absen', 'UsersController@ProcessAbsen')->name('ProcessAbsen');
 	Route::post('/absen/keluar/{id_absen}', 'UsersController@AbsenKeluar')->name('ProcessAbsenKeluar');
+	Route::get('/laporan', 'UsersController@LaporanAbsen')->name('Laporan');
 
 	// Get File Fotooo
 	Route::get('/file/{file}', 'UsersController@GetFile');

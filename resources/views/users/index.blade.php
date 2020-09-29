@@ -1,68 +1,98 @@
 @extends('users.dashboard_users')
 @section('content')
 <div class="container-fluid">
-	<div class="col-lg-12">
-		<div class="card">
-			<div class="card-header">
-				<h4>Absensi</h4>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card">
+				<div class="card-header">
+					<h4>Absensi</h4>
+				</div>
+				<div class="card-body">
+					<form method="POST" action="{{ route('ProcessAbsen') }}" enctype="multipart/form-data">
+						{{csrf_field()}}
+						@if (session('sukses'))
+						<div class="alert alert-info">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+							{{ session('sukses') }}
+						</div>
+						@elseif(session('gagal'))
+						<div class="alert alert-danger">
+							<button type="button" class="close" data-dismiss="alert">×</button>
+							{{ session('gagal') }}
+						</div>
+						@endif
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label>Kehadiran</label>
+									<select class="form-control" name="cutoff">
+										<option value="yes">Hadir</option>
+										<option value="no">Tidak hadir</option>
+									</select>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="form-group">
+									<label>Keterangan Jika Izin</label>
+									<input class="form-control" type="file" name="attachment">
+									<small style="color: red">* Kosongkan Jika Kamu Hadir</small><br>
+									<small style="color: red">* Foto Bukti Gambar Surat Sakit</small>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="form-group">
+									<input class="form-control" type="hidden" name="check_in" value="check_in">
+									{{-- <label>Absensi</label>
+										<select class="form-control" name="btnIn">
+											<option value="check_in">Absen Masuk</option>
+											<option value="check_out">Absen Keluar</option>
+										</select> --}}
+									</div>
+								</div>
+								<div class="col-lg-12">
+									<div class="form-group">
+										<button type="submit" style="width: 100%;" class="btn btn-flat btn-success">Absen Masuk</button>	
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 			</div>
-			<div class="card-body">
-				<form method="POST" action="{{ route('ProcessAbsen') }}" enctype="multipart/form-data">
-					{{csrf_field()}}
-					@if (session('sukses'))
-					<div class="alert alert-success">
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						{{ session('sukses') }}
-					</div>
-					@elseif(session('gagal'))
-					<div class="alert alert-danger">
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						{{ session('gagal') }}
-					</div>
-					@endif
-					<div class="row">
-						<div class="col-lg-6">
-							<div class="form-group">
-								<label>Kehadiran</label>
-								<select class="form-control" name="cutoff">
-									<option value="yes">Hadir</option>
-									<option value="no">Tidak hadir</option>
-								</select>
-							</div>
-						</div>
-						<div class="col-lg-6">
-							<div class="form-group">
-								<label>Keterangan Jika Izin</label>
-								<input class="form-control" type="file" name="attachment">
-								<small style="color: red">* Kosongkan Jika Kamu Hadir</small><br>
-								<small style="color: red">* Foto Bukti Gambar Surat Sakit</small>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="form-group">
-								<input class="form-control" type="hidden" name="check_in" value="check_in">
-								{{-- <label>Absensi</label>
-								<select class="form-control" name="btnIn">
-									<option value="check_in">Absen Masuk</option>
-									<option value="check_out">Absen Keluar</option>
-								</select> --}}
-							</div>
-						</div>
-						<div class="col-lg-12">
-							<div class="form-group">
-								<button type="submit" style="width: 100%;" class="btn btn-flat btn-success">Absen Masuk</button>	
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="card">
+				<div class="card-header">
+					<h4 class="text-dark">Riwayat Absensi</h4>
+					<form method="GET" action="{{ route('Laporan') }}">
+						<div class="row">
+							<div class="col-lg-4">
+								<div class="form-group">
+									<div class="ml-auto">
+										<input class="form-control" type="date" name="tanggal_start" value="{{ date('Y-m-d') }}">
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4">
+								<div class="form-group">                
+									<div class="ml-auto">
+										<input class="form-control" type="date" name="tanggal_end">
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-4">								
+								<div class="form-group">
+									<div class="button">        
+										<button class="btn btn-danger btn-sm">Print Absen</button>
+									</div> 
+								</div> 
+							</div>
+						</div>
+					</form>
+				</div>
 				<div class="card-body">
 					<table id="table" class="table">
 						<thead>
@@ -86,7 +116,7 @@
 								<td class="text-center">
 									<form action="{{ route('ProcessAbsenKeluar',$key->id)}}" method="POST">
 										@csrf
-										<button class="btn btn-primary btn-sm" type="submit">Absen Keluar</button><br>
+										<button class="btn btn-warning btn-xl btn-block" type="submit">Absen Keluar</button><br>
 										<small style="color: red;">* Tombol Absen Keluar !</small>
 									</form>
 								</td>
