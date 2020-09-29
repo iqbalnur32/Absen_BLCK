@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Route;
 // Auth
 Route::group([], function () {
 	Route::get('login', 'AuthController@LoginView');
+	Route::get('register', 'AuthController@RegisterView');
 	Route::post('login', 'AuthController@LoginProcess')->name('loginProcess');
+	Route::post('register', 'AuthController@RegisterProcess')->name('registerProcess');
 	Route::get('logout', 'AuthController@Logout');
 });
 

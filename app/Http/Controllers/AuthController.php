@@ -17,11 +17,7 @@ class AuthController extends Controller
 		$this->request = $request;
 	}
 
-	public function LoginView()
-	{
-		return view('auth.v_login');
-	}
-
+	// Login Rules
 	public function rules_login()
 	{
 		$loginType = filter_var($this->request->email, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
@@ -32,6 +28,54 @@ class AuthController extends Controller
 		];
 	}
 
+	public function rules_register()
+	{
+		return [
+			'name' => 'required|string',
+			'email' => 'required|string',
+			'password' => 'required|string',
+			'address' => 'required|string',
+			'no_phone' => 'required|string',
+			'role' => 'required|string',
+		];
+	}
+
+	public function LoginView()
+	{
+		return view('auth.v_login');
+	}
+
+	// Register
+	public function RegisterView()
+	{
+		return view('auth.v_register');
+	}
+
+	// Register Process
+	public function RegisterProcess(Request $request)
+	{
+		try {
+				
+			$this->validate($request, $this->rules_register());	
+
+			Users::create([
+				'name' => $request->name,
+				'email' => $request->email,
+				'password' => Hash::make($request->password),
+				'address' => $request->address,
+				'no_phone' => $request->no_phone,
+				'role' => $request->role,
+			]);
+
+			return redirect('login')->with('sukses', 'Register Berhasil Silahkan Login !');
+
+		} catch (Exception $e) {
+			
+			return redirect()->back()->with('gagal', 'Login Gagal');
+		}
+	}
+
+	// Process Login
 	public function LoginProcess(Request $request)
 	{
 		try {

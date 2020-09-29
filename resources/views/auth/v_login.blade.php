@@ -47,6 +47,9 @@
                     </div>
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary btn-block">Masuk</button>
+                        <div class="form-group mt-2">
+                            <p><a href="{{ url('register') }}" class="btn btn-light btn-block">Daftar</a></p>
+                        </div>
                     </div>
                 </form>
             </div>
